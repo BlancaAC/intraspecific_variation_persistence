@@ -45,6 +45,14 @@ for (i in seq_along(dd.list)){
 
   temp <- temp %>% mutate(degree= rowSums(select(.,all_of(pollinators))!=0))
   temp <- temp %>% filter(degree !=0)
+  temp <- temp %>%
+    mutate(raw_cv = apply(select(., all_of(pollinators)), 1, function(x) {
+      if (mean(x) == 0) return(NA)
+      sd(x) / mean(x)
+    })) %>%
+    mutate(specificity = (raw_cv - min(raw_cv, na.rm = TRUE)) / 
+             (max(raw_cv, na.rm = TRUE) - min(raw_cv, na.rm = TRUE))) %>%
+    dplyr::select(-raw_cv)
   dd.list[[i]] <- temp
 }
 

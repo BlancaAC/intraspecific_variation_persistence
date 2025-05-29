@@ -93,7 +93,7 @@ for (i in 1:ncol(seeds_per_visit_to_flower)){
 }
 
 int <- dd %>% select(any_of(c(pollinators, "Plant_id", "Plant_sp", "N_flowers", 
-                              "Flowering_min", "degree"))) %>% unique() %>% as.data.frame()
+                              "Flowering_min", "degree", "specificity"))) %>% unique() %>% as.data.frame()
 rownames(int) <- int$Plant_id
 write.csv(int, paste0("Output/plant_attr_", focal, ".csv"))
 
@@ -217,11 +217,12 @@ plot.vis.fl /plot.fl / plot.plant + plot_annotation(tag_levels = 'A')
 
 
 # Create dataset with visitation and benefits data
-fitness.con <- cbind(vis.mat, total.ben, select(int, "Plant_id", "N_flowers", "Flowering_min", "degree")) %>% 
+fitness.con <- cbind(vis.mat, total.ben, dplyr::select(int, "Plant_id", "N_flowers", 
+                                                "Flowering_min", "degree", "specificity")) %>% 
   dplyr::mutate(sum_pol= rowSums(across(pollinators)))
 
 # visualize results with PCA
-x <- select(fitness.con, "N_flowers", "sum_pol", "N_seeds_per_visit_flower", "degree")
+x <- select(fitness.con, "N_flowers", "sum_pol", "N_seeds_per_visit_flower", "degree", "specificity")
 write.csv(x, paste0("Output/fitness_components_", focal, ".csv"))
 
 res.pca <- prcomp(x, scale = TRUE)
@@ -242,7 +243,8 @@ pca.plot <-ggplot(PCAvalues, aes(x = PC1, y = PC2)) +
                color = "grey40") +
   geom_point(aes(size=size), color="grey40", alpha=0.7) +
   annotate("text", x = (PCAloadings$PC1*4.5), y = (PCAloadings$PC2*4.5), size=4,
-           label = c("Flower \nproduction", "Visitation \nrate", "Pollinator \ncontribution per visit", "Plant \ndegree")) + 
+           label = c("Flower \nproduction", "Visitation \nrate", 
+                     "Pollinator \ncontribution per visit", "Plant \ndegree", "Plant \nspecificity")) + 
   theme_bw() + xlab(paste0("PC1 ", "(", round(var$importance[2,1]*100, 2), "%", ")")) + 
   ylab(paste0("PC2 ", "(", round(var$importance[2,2]*100,2), "%", ")")) + 
   guides(size=guide_legend(title="Number of seeds \n(per plant individual)")) +
@@ -258,7 +260,8 @@ if (focal=="HCOM"){
                  color = "grey40") +
     geom_point(aes(size=size), color="grey40", alpha=0.7) +
     annotate("text", x = (PCAloadings$PC1*4.5), y = (PCAloadings$PC2*4.5), size=4,
-             label = c("Flower \nproduction", "Visitation \nrate", "Pollinator \ncontribution per visit", "Plant \ndegree")) + 
+             label = c("Flower \nproduction", "Visitation \nrate", 
+                       "Pollinator \ncontribution per visit", "Plant \ndegree", "Plant \nspecificity")) + 
     theme_bw() + xlab(paste0("PC1 ", "(", round(var$importance[2,1]*100, 2), "%", ")")) + 
     ylab(paste0("PC2 ", "(", round(var$importance[2,2]*100,2), "%", ")")) + 
     guides(size=guide_legend(title="Number of seeds \n(per plant individual)")) +

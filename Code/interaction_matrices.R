@@ -1,7 +1,7 @@
 
 
 sp <- focal
-n.random <- 100
+n.random <- 400
 
 beta.mat <- read.csv(paste0("Output/beta_matrix_", sp, ".csv")) %>% column_to_rownames("X")
 vis.mat <- read.csv(paste0("Output/vis_matrix_", sp, ".csv")) %>% column_to_rownames("X") 
@@ -204,13 +204,14 @@ A.list.flat <- flatten(A.ran.list)
 
 #### Increasing population size by incorporating plant individuals with increasing generalization in pollinator use
 
-x <- specieslevel(vis.mat, index=c("species specificity"), level="lower") %>% rownames_to_column("Plant_id") %>% arrange((-species.specificity.index))
+specif <- specieslevel(vis.mat, index=c("species specificity"), level="lower") %>% 
+  rownames_to_column("Plant_id") %>% arrange((-species.specificity.index))
 
 # sorting by degree
 gen.output <- list()
 int.mat.d <- int.mat %>% mutate(degree= rowSums(.!=0)) %>% 
   rownames_to_column("Plant_id") %>% 
-  left_join(x, by="Plant_id") %>% 
+  left_join(specif, by="Plant_id") %>% 
   arrange(degree, -species.specificity.index) %>% column_to_rownames("Plant_id")
 
 for(i in seq(from = 2, to = nrow(int.mat.d), by = 1)) { 
@@ -342,8 +343,6 @@ for (i in seq_along(PI.list)) {
 A.list <- c(A.list.flat, A.gen.list)
 
 }
-
-
 
 
 
@@ -533,3 +532,23 @@ for (row in rownames(A)){
 A.list <- c(A.list, list(A))
 
 }
+
+
+
+
+#set a different color for each plant species
+sp.color <- switch(focal,
+                   "CLIB" = "#5DA6A7",
+                   "HCOM" = "#F2C57C",
+                   "HHAL" = "#E8875A")
+sp.label <- switch(focal,
+                   "CLIB" = ~italic("Cistus libanotis"),
+                   "HCOM" = ~italic("Halimium calycinum"),
+                   "HHAL" = ~italic("Halimium halimifolium"))
+
+ggplot(int.mat.d, aes(x=degree)) +
+  geom_histogram(binwidth = 1, alpha=0.6, fill=sp.color, color=sp.color)+
+  labs(x="Individual plant degree", y = "Count")+
+  theme_bw() + theme(axis.text=element_text(size=14),
+                     axis.title=element_text(size=18))
+

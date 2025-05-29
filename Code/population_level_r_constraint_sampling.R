@@ -299,8 +299,16 @@ contr.plot <- ggplot(omega.yes.all, aes(x=omega)) +
 
 
 # for each plant individual
+#specif <- specieslevel(vis.mat, index=c("species specificity"), level="lower") %>% 
+#  rownames_to_column("Plant_id") %>% arrange((-species.specificity.index))
+#specif.data <- specif %>% dplyr::rename("plant_id"="Plant_id", 
+#                                        "specificity"="species.specificity.index")
 
 k.omega <- omega.yes.all %>% merge(plant.attr, by="plant_id")
+
+
+#sort(omega.yes.all$plant_id)
+#sort(specif.data$plant_id)
 
 degree.plot <- ggplot(k.omega, aes(x = degree, y = omega)) +
   geom_point(color=sp.color, alpha=0.9) + theme_bw() +
@@ -310,14 +318,14 @@ degree.plot <- ggplot(k.omega, aes(x = degree, y = omega)) +
   ylab("Feasibility domain size") + xlab("Degree")
 
 k.omega_long <- k.omega %>%
-  pivot_longer(cols = c(degree, N_flowers, sum_pol, N_seeds_per_visit_flower), 
+  pivot_longer(cols = c(degree, N_flowers, sum_pol, N_seeds_per_visit_flower, specificity), 
                names_to = "predictor", values_to = "pred_value") %>%
   pivot_longer(cols = c(omega, range_r_plant, range_r_pol), 
                names_to = "response", values_to = "resp_value")
 
 # label names for predictor variable
-p.labs <- c("Plant degree", "Number of flowers", "Pollinator contribution", "Visitation rate")
-names(p.labs) <- c("degree", "N_flowers", "N_seeds_per_visit_flower", "sum_pol")
+p.labs <- c("Plant degree", "Plant specificity", "Number of flowers", "Pollinator contribution", "Visitation rate")
+names(p.labs) <- c("degree","specificity", "N_flowers", "N_seeds_per_visit_flower", "sum_pol")
 
 # label names for predictor variable
 r.labs <- c("Feasibility \ndomain size", "Range of plant \ngrowth rates", "Range of pollinator \ngrowth rates")

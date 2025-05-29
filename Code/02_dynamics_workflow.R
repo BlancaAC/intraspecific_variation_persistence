@@ -49,6 +49,7 @@ per.plant.ind <- FALSE
 plot.comm.list <- list() # plot for each species
 vul.sp.all.list <- list()
 metric.all.list <- list()
+omega.all.list <- list()
 
 for(name in sp.names){
   focal <- name
@@ -62,6 +63,7 @@ for(name in sp.names){
   plot.comm.list[[name]] <- plot.comm
   vul.sp.all.list[[name]] <- vul.sp.all
   metric.all.list[[name]] <- metric.all
+  omega.all.list[[name]] <- omega.all
   
 }
 

@@ -5,7 +5,8 @@ dd <- dd.list[[focal]]
 # figure out the names of the pollinators that visited this plant
 cn <- colnames(dd)
 pollinators <- cn[which(!cn %in% c('Plant_id','Plant_sp','Response',
-                                   'Plot','N_flowers','Type', 'Flowering_min', 'degree') )]
+                                   'Plot','N_flowers','Type', 'Flowering_min', 
+                                   'degree', 'specificity') )]
 
 # aggregate bernoullis into binomials
 dd_poi <-
