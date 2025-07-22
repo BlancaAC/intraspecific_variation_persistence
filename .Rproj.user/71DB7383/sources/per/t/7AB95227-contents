@@ -402,15 +402,15 @@ plot.list <- lapply(A.list,
              y = bquote("A's growth rate"~(r[A]))
            ) +
            scale_fill_manual(values = c("#5DA6A7", "#F2C57C")) +
-           theme_bw() + theme(axis.title=element_text(size=16), 
-                              axis.text=element_text(size=12),
-                              plot.title = element_text(size=12),
+           theme_bw() + theme(axis.title=element_text(size=30), 
+                              axis.text=element_text(size=25),
+                              plot.title = element_text(size=20),
                               axis.title.y.right = element_text(
                                 margin = margin(t = 0, r = 0, b = 0, l = 10)),
                               axis.title.x = element_text(
                                 margin = margin(t = 10, r = 0, b = 0, l = 0)),
                               legend.position = "none") +
-           ggtitle(paste0('Feasibility domain size = ', signif(together_gr$Omega, digits=2)))
+           ggtitle(paste0('Feasibility \ndomain size = ', signif(together_gr$Omega, digits=2)))
            return(p)
        }
 )
